@@ -15,6 +15,10 @@ public class Distribuitor {
     public boolean payed;
     private int newInfrastructureCost;
     private int newProductionCost;
+
+    private int thisMonthConsummers;
+    private int lastMonthConsumers;
+
     public List<Contract> contracte  = new ArrayList<>();
     public List<Contract> contracteActive;
 
@@ -77,6 +81,8 @@ public class Distribuitor {
         this.currentConsumators = 0;
         this.faliment = false;
         this.payed = false;
+        thisMonthConsummers = 0;
+        lastMonthConsumers = 0;
         contracteActive = new ArrayList<>();
     }
     public void updateChanges(){
@@ -84,10 +90,10 @@ public class Distribuitor {
         setProductionCost(newProductionCost);
     }
     int getPretfinalContract() {
-        if (currentConsumators == 0) {
+        if (lastMonthConsumers == 0) {
             return Math.round(InfrastructureCost + getProductionCost() + getProfit());
         }
-        return (int) Math.round(Math.floor(InfrastructureCost / currentConsumators) + getProductionCost() + getProfit());
+        return (int) Math.round(Math.floor(InfrastructureCost / lastMonthConsumers) + getProductionCost() + getProfit());
     }
 
     public int getCostMonth() {
@@ -111,7 +117,9 @@ public class Distribuitor {
     }
 
     public void deleteContract(Contract contract) {
-        contracteActive.remove(contract);
+
+        boolean verify = contracteActive.remove(contract);
+        if(verify)
         currentConsumators--;
     }
 
@@ -135,5 +143,8 @@ public class Distribuitor {
     public void getChanges(int x, int y){
         newInfrastructureCost = x;
         newProductionCost = y;
+    }
+    public void updateConsumers(){
+        lastMonthConsumers = currentConsumators;
     }
 }

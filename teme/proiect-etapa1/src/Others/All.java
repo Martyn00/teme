@@ -29,17 +29,17 @@ public class All {
     }
 
     public void monthlyUpdate() {
-        for(Contract contract : contracte){
-           boolean over = contract.UpdateContract();
+        for (Contract contract : contracte) {
+            boolean over = contract.UpdateContract();
         }
     }
 
     public void monthlyiteration() {
         System.out.println();
         for (MonthlyUpdates mon : data.getMonthlyUpdates()) {
+            update(mon);
             consumatori.printConsumatoriStatus();
             distribuitori.printDistribuitoriStatus();
-            update(mon);
             distribuitori.loadDistribuitori();
             consumatori.updateBudget();
             createNewContracts();
@@ -55,7 +55,7 @@ public class All {
         for (Consumator cons : consumatori.retList()) {
             if (!cons.faliment && cons.freeOfContract) {
                 Distribuitor distribuitor = distribuitori.findLowestpriceDistributor();
-                Contract contract = new Contract(cons,distribuitor);
+                Contract contract = new Contract(cons, distribuitor);
                 contracte.add(contract);
                 cons.contracte.add(contract);
                 cons.freeOfContract = false;
@@ -64,10 +64,10 @@ public class All {
         }
     }
 
-    public void DestroyContracts(){
-        for(Consumator consumator : consumatori.retList()){
-            if(consumator.faliment){
-                for(Contract contract : consumator.contracte){
+    public void DestroyContracts() {
+        for (Consumator consumator : consumatori.retList()) {
+            if (consumator.faliment) {
+                for (Contract contract : consumator.contracte) {
                     contract.getDistribuitor().deleteContract(contract);
                     contracte.remove(contract);
                     consumator.freeOfContract = true;
@@ -75,21 +75,24 @@ public class All {
                 consumator.contracte = new ArrayList<>();
             }
         }
-        List<Contract> del = new ArrayList<>();
-        for(Contract contract : contracte){
-                if(contract.monthstoDo == contract.monthsDone){
-                    contract.getDistribuitor().deleteContract(contract);
-                    contract.getConsumator().freeOfContract = true;
-                    del.add(contract);
-                }
+        for (Distribuitor distribuitor : distribuitori.getDists()) {
+            distribuitor.updateConsumers();
         }
-        for(Contract contract : del){
+        List<Contract> del = new ArrayList<>();
+        for (Contract contract : contracte) {
+            if (contract.monthstoDo == contract.monthsDone && !contract.restanta) {
+                contract.getDistribuitor().deleteContract(contract);
+                contract.getConsumator().freeOfContract = true;
+                del.add(contract);
+            }
+        }
+        for (Contract contract : del) {
             contracte.remove(contract);
         }
-        for(Distribuitor distribuitor : distribuitori.getDists()){
-            if(distribuitor.getBudget() < 0){
+        for (Distribuitor distribuitor : distribuitori.getDists()) {
+            if (distribuitor.getBudget() < 0) {
                 distribuitor.faliment = true;
-                for(Contract contract : distribuitor.getContracts()){
+                for (Contract contract : distribuitor.getContracts()) {
                     contracte.remove(contract);
                     contract.getConsumator().freeOfContract = true;
                     contract.getConsumator().contracte = new ArrayList<>();
@@ -107,10 +110,10 @@ public class All {
     }
 
     public void update(MonthlyUpdates mon) {
-        if(!mon.getNewConsumers().isEmpty()){
+        if (!mon.getNewConsumers().isEmpty()) {
             consumatori.addConsumatori(mon.getNewConsumers());
         }
-        if(!mon.getCostsChanges().isEmpty()){
+        if (!mon.getCostsChanges().isEmpty()) {
             distribuitori.UpdateDistribuitori(mon.getCostsChanges());
 
         }

@@ -6,7 +6,7 @@ public class Contract {
     public int monthsDone;
     public int monthstoDo;
     public int costConsumator;
-    boolean restanta;
+    public boolean restanta;
     public Contract(Consumator consumator,  Distribuitor distribuitor){
         this.consumator = consumator;
         this.distribuitor = distribuitor;
@@ -22,29 +22,32 @@ public class Contract {
         monthsDone++;
         if(restanta){
             if(monthsDone == monthstoDo - 1){
-                System.out.println(consumator.getBudget());
-//                System.out.println("Se termina ma???");
-                money = consumator.PayCost((int) (1.2 * costConsumator));
+                money = consumator.PayCost((int) (2.2 * costConsumator));
                 distribuitor.getMoney(money);
-                System.out.println("a platit" + money);
+                System.out.println(consumator.getId()+"s-a platit" + money +" " +monthsDone + " " + monthstoDo);
                 if(money == 0){
                     consumator.faliment = true;
+                    return true;
                 }
+                return false;
             }else{
                 money = consumator.PayCost((int) (2.2 * costConsumator));
-                System.out.println("a platit" + money);
+                System.out.println(consumator.getId()+" a platit" + money);
                 distribuitor.getMoney(money);
                 if(money == 0){
                     consumator.faliment = true;
                     return true;
                 }
+                return false;
             }
         }
         money = consumator.PayCost((int) (costConsumator));
         distribuitor.getMoney(money);
-        System.out.println("a platit" + money);
-        if(monthsDone == monthstoDo){
-//            System.out.println("Se termina ma???");
+        System.out.println(consumator.getId()+" a platit" + money);
+        System.out.println(consumator.getBudget());
+//        aici e posibila o greseala
+        if(monthsDone == monthstoDo - 1){
+//            fix aici e problema, daca capata restanta on ultima tura...
             if(money == 0){
                 restanta = true;
                 return false;
