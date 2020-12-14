@@ -1,13 +1,16 @@
 package Output;
 
+import Entities.Consumator;
+
 public class ConsumersOutput {
     private int id;
     private boolean isBankrupt;
     private int budget;
-    ConsumersOutput(int id, boolean faliment, int budget){
-        this.id = id;
-        this.isBankrupt = faliment;
-        this.budget = budget;
+
+    ConsumersOutput(Consumator consumator) {
+        this.id = consumator.getId();
+        this.isBankrupt = consumator.faliment;
+        this.budget = consumator.getBudget();
     }
 
     public int getId() {
@@ -18,11 +21,11 @@ public class ConsumersOutput {
         this.id = id;
     }
 
-    public boolean isBankrupt() {
+    public boolean getisBankrupt() {
         return isBankrupt;
     }
 
-    public void setBankrupt(boolean bankrupt) {
+    public void setisBankrupt(boolean bankrupt) {
         isBankrupt = bankrupt;
     }
 

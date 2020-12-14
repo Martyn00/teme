@@ -7,6 +7,7 @@ public class Data {
     private int numberOfTurns;
     private InitialData initialData;
     private final List<MonthlyUpdates> monthlyUpdates = new ArrayList<>();
+
     public int getNumberOfTurns() {
         return numberOfTurns;
     }

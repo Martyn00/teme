@@ -3,6 +3,7 @@ package Others;
 import Entities.*;
 import Input.Data;
 import Input.MonthlyUpdates;
+import Output.Output;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,8 @@ public class All {
         distribuitori = new Distribuitori(data.getInitialData().getDistributors());
         consumatori = new Consumatori(data.getInitialData().getConsumers());
 //
-        consumatori.printConsumatoriStatus();
-        distribuitori.printDistribuitoriStatus();
+//        consumatori.printConsumatoriStatus();
+//        distribuitori.printDistribuitoriStatus();
         consumatori.updateBudget();
         createNewContracts();
         monthlyUpdate();
@@ -34,25 +35,38 @@ public class All {
         }
     }
 
-    public void monthlyiteration() {
-        System.out.println();
-        for (MonthlyUpdates mon : data.getMonthlyUpdates()) {
+    public Output monthlyiteration() {
+        for (int i = 0; i < data.getMonthlyUpdates().size(); i++) {
+            MonthlyUpdates mon = data.getMonthlyUpdates().get(i);
             update(mon);
-            consumatori.printConsumatoriStatus();
-            distribuitori.printDistribuitoriStatus();
             distribuitori.loadDistribuitori();
             consumatori.updateBudget();
             createNewContracts();
-//            distribuitori.loadConsumers();
             monthlyUpdate();
             distribuitori.payTaxes();
+            for (Consumator consumator : consumatori.retList()) {
+                if (consumator.faliment) {
+                    for (Contract contract : consumator.contracte) {
+                        contract.getDistribuitor().deleteContract(contract);
+                        contracte.remove(contract);
+                        consumator.freeOfContract = true;
+                    }
+                    consumator.contracte = new ArrayList<>();
+                }
+            }
+            if (i == data.getMonthlyUpdates().size() - 1) {
+                return new Output(consumatori.retList(), distribuitori.getDists());
+            }
             DestroyContracts();
-            System.out.println();
         }
+        return null;
     }
 
     public void createNewContracts() {
         for (Consumator cons : consumatori.retList()) {
+            if (cons.getId() == 55) {
+                System.out.println(cons.faliment + "// " + cons.freeOfContract);
+            }
             if (!cons.faliment && cons.freeOfContract) {
                 Distribuitor distribuitor = distribuitori.findLowestpriceDistributor();
                 Contract contract = new Contract(cons, distribuitor);
@@ -102,11 +116,8 @@ public class All {
         }
     }
 
-    public void doALl() {
-        monthlyiteration();
-        consumatori.printConsumatoriStatus();
-        System.out.println();
-        distribuitori.printDistribuitoriStatus();
+    public Output doALl() {
+        return monthlyiteration();
     }
 
     public void update(MonthlyUpdates mon) {

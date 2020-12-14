@@ -106,7 +106,7 @@ public class Distribuitor {
 
     public void PayCostMonth() {
         if(!faliment){
-            System.out.println("a scazut" + getCostMonth() + " " +InfrastructureCost + " " + ProductionCost + " " + currentConsumators);
+//            System.out.println("a scazut" + getCostMonth() + " " +InfrastructureCost + " " + ProductionCost + " " + currentConsumators);
             Budget -= getCostMonth();
         }
     }

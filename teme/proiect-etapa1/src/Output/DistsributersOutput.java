@@ -28,11 +28,11 @@ public class DistsributersOutput {
         this.budget = budget;
     }
 
-    public boolean isBankrupt() {
+    public boolean getisBankrupt() {
         return isBankrupt;
     }
 
-    public void setBankrupt(boolean bankrupt) {
+    public void setisBankrupt(boolean bankrupt) {
         isBankrupt = bankrupt;
     }
 
@@ -48,7 +48,7 @@ public class DistsributersOutput {
         this.id = distribuitor.getId();
         this.budget = distribuitor.getBudget();
         this.isBankrupt = distribuitor.faliment;
-        for(Contract contract : distribuitor.getContracts()){
+        for (Contract contract : distribuitor.getContracts()) {
             this.contracts.add(new ContractOutput(contract));
         }
     }

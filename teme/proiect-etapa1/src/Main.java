@@ -1,5 +1,6 @@
 import Input.Data;
 import Others.All;
+import Output.Output;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
@@ -11,6 +12,9 @@ public class Main {
         Data data;
         data = objectMapper.readValue(new File(args[0].toString()), Data.class);
         All all = new All(data);
-        all.doALl();
+        Output output = all.doALl();
+        objectMapper = new ObjectMapper();
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(args[1].toString()), output);
+        System.out.println(args[1].toString());
     }
 }
